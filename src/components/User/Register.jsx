@@ -2,7 +2,6 @@ import { useState } from "react";
 import { alertError, alertSuccess } from "../../lib/alert";
 import { register } from "../../lib/api/user";
 import { Link, useNavigate } from "react-router";
-import { Helmet } from 'react-helmet-async'
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -41,13 +40,6 @@ export default function Register() {
 
   return (
     <>
-      <Helmet>
-        <title>Register</title>
-        <meta
-          name="description"
-          content="Ini adalah halaman register contact management."
-        />
-      </Helmet>
       <div className="animate-fade-in bg-gray-800 bg-opacity-80 p-8 rounded-xl shadow-custom border border-gray-700 backdrop-blur-sm w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-block p-3 bg-gradient rounded-full mb-4">

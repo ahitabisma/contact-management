@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { getUser, updatePassword, updateProfile } from "../../lib/api/user";
-import { useEffectOnce, useLocalStorage } from "react-use";
+import { useEffectOnce } from "react-use";
 import { useNavigate } from "react-router";
 import { alertError, alertSuccess } from "../../lib/alert";
 import { errorHandler } from "../../lib/api/errorHandler";
+import { useAuthStore } from "../../stores/auth";
 
 export default function Profile() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [token, _] = useLocalStorage("token", "");
+  const { token } = useAuthStore();
   const navigate = useNavigate();
 
   async function fetchUserDetail() {
     try {
-      const response = await getUser(token);
+      const response = await getUser(token.token);
 
       setName(response.data.data?.name);
     } catch (error) {
@@ -30,7 +31,7 @@ export default function Profile() {
     e.preventDefault();
 
     try {
-      await updateProfile(token, {
+      await updateProfile(token.token, {
         name: name,
       });
 
@@ -48,7 +49,7 @@ export default function Profile() {
         return;
       }
 
-      await updatePassword(token, {
+      await updatePassword(token.token, {
         password: password,
       });
 
@@ -62,7 +63,7 @@ export default function Profile() {
   }
 
   useEffectOnce(() => {
-    fetchUserDetail()
+    fetchUserDetail();
   });
 
   return (

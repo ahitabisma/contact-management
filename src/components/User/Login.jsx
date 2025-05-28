@@ -3,14 +3,13 @@ import { alertError } from "../../lib/alert";
 import { login } from "../../lib/api/user";
 import { Link, useNavigate } from "react-router";
 import { errorHandler } from "../../lib/api/errorHandler";
-import { useLocalStorage } from "react-use";
-import { Helmet } from 'react-helmet-async'
+import { useAuthStore } from "../../stores/auth";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [_, setToken] = useLocalStorage("token", "");
+  const { setAuth } = useAuthStore();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -21,11 +20,18 @@ export default function Login() {
         password: password,
       });
 
+      console.log("Login response:", response.data?.data);
+
       if (response.status === 200) {
-        setToken(response.data.data?.token);
+        // setToken(response.data.data?.token);
+
+        setAuth({
+          token: response.data.data?.token,
+          user: response.data.data?.user,
+        });
 
         await navigate({
-          pathname: "/dashboard",
+          pathname: "/dashboard/contacts",
         });
       } else {
         await alertError(response.data?.errors || "Login failed");
@@ -37,13 +43,6 @@ export default function Login() {
 
   return (
     <>
-      <Helmet>
-        <title>Login</title>
-        <meta
-          name="description"
-          content="Ini adalah halaman login contact management."
-        />
-      </Helmet>
       <div className="animate-fade-in bg-gray-800 bg-opacity-80 p-8 rounded-xl shadow-custom border border-gray-700 backdrop-blur-sm w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-block p-3 bg-gradient rounded-full mb-4">

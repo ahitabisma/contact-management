@@ -1,6 +1,7 @@
-import { alertError } from "../../lib/alert";
+import { useAuthStore } from "../../stores/auth";
 
 export async function errorHandler(error, alertError) {
+    const authStore = useAuthStore();
     if (error.response) {
         await alertError(error.response.data?.errors || "Server error");
     } else if (error.request) {
